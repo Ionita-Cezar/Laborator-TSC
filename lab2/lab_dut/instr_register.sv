@@ -26,10 +26,17 @@ import instr_register_pkg::*;  // user-defined types are defined in instr_regist
   always@(posedge clk, negedge reset_n)   // write into register
     if (!reset_n) begin
       foreach (iw_reg[i])
-        iw_reg[i] = '{opc:ZERO,default:0};  // reset to all zeros
+        iw_reg[i] = '{opc:ZERO, op_a: 32'b0, op_b: 32'b0};
     end
     else if (load_en) begin
-      iw_reg[write_pointer] = '{opcode,operand_a,operand_b};
+      case (opcode)     // Perform operation based on opcode
+        ADD: iw_reg[write_pointer] = '{opcode, operand_a + operand_b, 32'b0};
+        SUB: iw_reg[write_pointer] = '{opcode, operand_a - operand_b, 32'b0};
+        MULT: iw_reg[write_pointer] = '{opcode, operand_a * operand_b, 32'b0};
+        DIV: iw_reg[write_pointer] = '{opcode, operand_a / operand_b, 32'b0};
+        MOD: iw_reg[write_pointer] = '{opcode, operand_a % operand_b, 32'b0};
+        default: iw_reg[write_pointer] = '{opcode, operand_a, operand_b};
+      endcase
     end
 
   // read from the register
