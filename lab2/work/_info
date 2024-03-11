@@ -10,99 +10,99 @@ cModel Technology
 dC:/Users/cezar/Desktop/facultate/sem 2/TSC/tsc_lab/lab2
 vinstr_register
 Z0 DXx6 sv_std 3 std 0 22 AD7iAPLo6nTIKk<N0eo=D3
-Z1 DXx4 work 18 instr_register_pkg 0 22 ]A^6U_T3fO:f[Z:k;IiLL1
-!s110 1709640674
+DXx4 work 18 instr_register_pkg 0 22 BWN^@ZIK=XOD7G2@SMMPT1
+!s110 1710141164
 !i10b 1
-!s100 =K[=CQ6H9S9ToP;RFP0PQ2
-IiX3K@I4D2a=;?Gn7Q:G_<1
-Z2 VDg1SIo80bB@j0V0VzS_@n1
+!s100 JPCICWcD7YLX;nM0B]FJF1
+IcHQhVFL5AH79@fT:C=QhK3
+Z1 VDg1SIo80bB@j0V0VzS_@n1
 !s105 instr_register_sv_unit
 S1
-Z3 dC:/Users/cezar/Desktop/facultate/sem 2/TSC/TSC/lab2
-w1709640632
+Z2 dC:/Users/cezar/Desktop/facultate/sem 2/TSC/TSC/lab2
+w1709640851
 8C:/Users/cezar/Desktop/facultate/sem 2/TSC/TSC/lab2/lab_dut/instr_register.sv
 FC:/Users/cezar/Desktop/facultate/sem 2/TSC/TSC/lab2/lab_dut/instr_register.sv
 L0 9
-Z4 OV;L;10.5c;63
+Z3 OV;L;10.5c;63
 r1
 !s85 0
 31
-!s108 1709640674.000000
+!s108 1710141164.000000
 !s107 C:/Users/cezar/Desktop/facultate/sem 2/TSC/TSC/lab2/lab_dut/instr_register.sv|
 !s90 -reportprogress|300|-work|work|C:/Users/cezar/Desktop/facultate/sem 2/TSC/TSC/lab2/lab_dut/instr_register.sv|
 !i113 1
-Z5 o-work work
-Z6 tCvgOpt 0
+Z4 o-work work
+Z5 tCvgOpt 0
 Xinstr_register_pkg
 R0
-!s110 1709640672
+!s110 1710142511
 !i10b 1
-!s100 [7MWzRQElN=K:L=c[d:9C0
-I]A^6U_T3fO:f[Z:k;IiLL1
-V]A^6U_T3fO:f[Z:k;IiLL1
+!s100 >1EI:PL]bF4Q0KU;:GhjL0
+IoL5jERBe0>A[QEb56XG^m2
+VoL5jERBe0>A[QEb56XG^m2
 S1
-R3
-w1614777450
+R2
+w1710141435
 8C:/Users/cezar/Desktop/facultate/sem 2/TSC/TSC/lab2/lab_dut/instr_register_pkg.sv
 FC:/Users/cezar/Desktop/facultate/sem 2/TSC/TSC/lab2/lab_dut/instr_register_pkg.sv
 L0 5
-R4
+R3
 r1
 !s85 0
 31
-!s108 1709640672.000000
+!s108 1710142511.000000
 !s107 C:/Users/cezar/Desktop/facultate/sem 2/TSC/TSC/lab2/lab_dut/instr_register_pkg.sv|
 !s90 -reportprogress|300|-work|work|C:/Users/cezar/Desktop/facultate/sem 2/TSC/TSC/lab2/lab_dut/instr_register_pkg.sv|
 !i113 1
+R4
 R5
-R6
 vinstr_register_test
 R0
-R1
-!s110 1709640682
+Z6 DXx4 work 18 instr_register_pkg 0 22 ]A^6U_T3fO:f[Z:k;IiLL1
+!s110 1710140783
 !i10b 1
-!s100 @N=XOV`;[WWiI<;VY_SjA2
-IQNNBmBQWPFoEidznnUN520
-R2
+!s100 @^NC:XO2oHC[aMI8Cll2V2
+I=_n6?3;]?>0a?H>@Xajki3
+R1
 !s105 instr_register_test_sv_unit
 S1
-R3
-w1614777408
+R2
+w1710140667
 8C:/Users/cezar/Desktop/facultate/sem 2/TSC/TSC/lab2/lab01_testbench-interface/instr_register_test.sv
 FC:/Users/cezar/Desktop/facultate/sem 2/TSC/TSC/lab2/lab01_testbench-interface/instr_register_test.sv
 L0 8
-R4
+R3
 r1
 !s85 0
 31
-!s108 1709640682.000000
+!s108 1710140783.000000
 !s107 C:/Users/cezar/Desktop/facultate/sem 2/TSC/TSC/lab2/lab01_testbench-interface/instr_register_test.sv|
 !s90 -reportprogress|300|-work|work|C:/Users/cezar/Desktop/facultate/sem 2/TSC/TSC/lab2/lab01_testbench-interface/instr_register_test.sv|
 !i113 1
+R4
 R5
-R6
 vtop
 R0
-R1
-!s110 1709640684
+R6
+!s110 1710140784
 !i10b 1
 !s100 Pg=M]M2k<1Dk;?TFRVBCm1
 Ie_YmN]7ao_^:ND[CLaimb3
-R2
+R1
 !s105 top_sv_unit
 S1
-R3
+R2
 w1709534542
 8C:/Users/cezar/Desktop/facultate/sem 2/TSC/TSC/lab2/lab01_testbench-interface/top.sv
 FC:/Users/cezar/Desktop/facultate/sem 2/TSC/TSC/lab2/lab01_testbench-interface/top.sv
 L0 5
-R4
+R3
 r1
 !s85 0
 31
-!s108 1709640684.000000
+!s108 1710140784.000000
 !s107 C:/Users/cezar/Desktop/facultate/sem 2/TSC/TSC/lab2/lab01_testbench-interface/top.sv|
 !s90 -reportprogress|300|-work|work|C:/Users/cezar/Desktop/facultate/sem 2/TSC/TSC/lab2/lab01_testbench-interface/top.sv|
 !i113 1
+R4
 R5
-R6

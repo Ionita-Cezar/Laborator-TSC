@@ -26,7 +26,7 @@ import instr_register_pkg::*;  // user-defined types are defined in instr_regist
   always@(posedge clk, negedge reset_n)   // write into register
     if (!reset_n) begin
       foreach (iw_reg[i])
-        iw_reg[i] = '{opc:ZERO, op_a: 32'b0, op_b: 32'b0};
+        iw_reg[i] = '{opcode, operand_a, operand_b, 64'b0};
     end
     else if (load_en) begin
       case (opcode)     // Perform operation based on opcode
