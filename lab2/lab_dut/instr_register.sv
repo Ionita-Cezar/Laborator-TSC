@@ -26,16 +26,19 @@ import instr_register_pkg::*;  // user-defined types are defined in instr_regist
   always@(posedge clk, negedge reset_n)   // write into register
     if (!reset_n) begin
       foreach (iw_reg[i])
-        iw_reg[i] = '{opcode, operand_a, operand_b, 64'b0};
+        iw_reg[i] = '{opc:ZERO, default:0};
     end
     else if (load_en) begin
       case (opcode)     // Perform operation based on opcode
-        ADD: iw_reg[write_pointer] = '{opcode, operand_a + operand_b, 32'b0};
-        SUB: iw_reg[write_pointer] = '{opcode, operand_a - operand_b, 32'b0};
-        MULT: iw_reg[write_pointer] = '{opcode, operand_a * operand_b, 32'b0};
-        DIV: iw_reg[write_pointer] = '{opcode, operand_a / operand_b, 32'b0};
-        MOD: iw_reg[write_pointer] = '{opcode, operand_a % operand_b, 32'b0};
-        default: iw_reg[write_pointer] = '{opcode, operand_a, operand_b};
+        ZERO:     iw_reg[write_pointer] = '{opcode, operand_a, operand_b, {64{1'b0}}};
+        PASSA:    iw_reg[write_pointer] = '{opcode, operand_a, operand_b, operand_a};
+        PASSB:    iw_reg[write_pointer] = '{opcode, operand_a, operand_b, operand_b};
+        ADD:      iw_reg[write_pointer] = '{opcode, operand_a, operand_b, operand_a + operand_b};
+        SUB:      iw_reg[write_pointer] = '{opcode, operand_a, operand_b, operand_a - operand_b};
+        MULT:     iw_reg[write_pointer] = '{opcode, operand_a, operand_b, operand_a * operand_b};
+        DIV:      iw_reg[write_pointer] = '{opcode, operand_a, operand_b, operand_b / operand_b};
+        MOD:      iw_reg[write_pointer] = '{opcode, operand_a, operand_b, operand_a % operand_b};
+        default:  iw_reg[write_pointer] = '{opc:ZERO, default:0};
       endcase
     end
 

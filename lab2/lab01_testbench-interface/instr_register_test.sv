@@ -15,8 +15,7 @@ module instr_register_test
    output opcode_t       opcode,
    output address_t      write_pointer,
    output address_t      read_pointer,
-   input  instruction_t  instruction_word,
-   output result         res
+   input  instruction_t  instruction_word
   );
 
   timeunit 1ns/1ns;
@@ -44,7 +43,7 @@ module instr_register_test
     $display("\nWriting values to register stack...");
     @(posedge clk) load_en = 1'b1;  // enable writing to register
     // repeat (3) begin - 11/03/2024 - IC
-    repeat (10) begin
+    repeat (WR_NT) begin
       @(posedge clk) randomize_transaction;
       @(negedge clk) print_transaction;
     end
@@ -53,7 +52,7 @@ module instr_register_test
     // read back and display same three register locations
     $display("\nReading back the same register locations written...");
     // for (int i=0; i<=2; i++) begin - 11/03/2024 - IC
-    for (int i=0; i<=9; i++) begin
+    for (int i=0; i<=RD_NR; i++) begin
       // later labs will replace this loop with iterating through a
       // scoreboard to determine which addresses were written and
       // the expected values to be read back
@@ -100,9 +99,9 @@ module instr_register_test
     $display("  result = %0d\n",    instruction_word.res);
   endfunction: print_results
 
-  function void check_result;
-  if()
-  else
-  endfunction: check_result
+  // function void check_result;
+  // if()
+  // else
+  // endfunction: check_result
 
 endmodule: instr_register_test
