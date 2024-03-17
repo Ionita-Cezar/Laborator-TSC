@@ -24,6 +24,7 @@ module instr_register_test
   parameter WR_NT = 20;
 
   int seed = 555;
+  int exp_result = 0;
 
   initial begin
     $display("\n\n***********************************************************");
@@ -58,6 +59,7 @@ module instr_register_test
       // the expected values to be read back
       @(posedge clk) read_pointer = i;
       @(negedge clk) print_results;
+      check_result;
     end
 
     @(posedge clk) ;
@@ -99,9 +101,33 @@ module instr_register_test
     $display("  result = %0d\n",    instruction_word.res);
   endfunction: print_results
 
-  // function void check_result;
-  // if()
-  // else
-  // endfunction: check_result
+  function void check_result;
+  exp_result = 0;
+
+  if(instruction_word.opc == ZERO)
+    exp_result = 0;
+  else if(instruction_word.opc == PASSA)
+    exp_result = instruction_word.op_a;
+  else if(instruction_word.opc == PASSB)
+    exp_result = instruction_word.op_b;
+  else if(instruction_word.opc == ADD)
+    exp_result = instruction_word.op_a + instruction_word.op_b;
+  else if(instruction_word.opc == SUB)
+    exp_result = instruction_word.op_a - instruction_word.op_b;
+  else if(instruction_word.opc == MULT)
+    exp_result = instruction_word.op_a * instruction_word.op_b;
+  else if(instruction_word.opc == DIV) begin
+    if(instruction_word.op_b == 0)
+      exp_result = 0;
+    else
+      exp_result = instruction_word.op_a / instruction_word.op_b;
+  end
+  else if(instruction_word.opc == MOD);
+    exp_result = instruction_word.op_a % instruction_word.op_b;
+  
+  if(exp_result != instruction_word.res)
+    $display("ERROR");
+
+  endfunction: check_result
 
 endmodule: instr_register_test
