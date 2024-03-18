@@ -26,9 +26,11 @@ module instr_register_test
   int seed = 555;
   int exp_result = 0;
 
+  instruction_t save_data [0:31];
+
   initial begin
     $display("\n\n***********************************************************");
-    $display(    "***  THIS IS NOT A SELF-CHECKING TESTBENCH (YET).  YOU  ***");
+    $display(    "***  THIS IS A SELF-CHECKING TESTBENCH.  YOU DON'T      ***");
     $display(    "***  NEED TO VISUALLY VERIFY THAT THE OUTPUT VALUES     ***");
     $display(    "***  MATCH THE INPUT VALUES FOR EACH REGISTER LOCATION  ***");
     $display(    "***********************************************************");
@@ -47,6 +49,8 @@ module instr_register_test
     repeat (WR_NT) begin
       @(posedge clk) randomize_transaction;
       @(negedge clk) print_transaction;
+      save_test_data;
+      // test_data;
     end
     @(posedge clk) load_en = 1'b0;  // turn-off writing to register
 
@@ -64,7 +68,7 @@ module instr_register_test
 
     @(posedge clk) ;
     $display("\n***********************************************************");
-    $display(  "***  THIS IS NOT A SELF-CHECKING TESTBENCH (YET).  YOU  ***");
+    $display(  "***  THIS IS A SELF-CHECKING TESTBENCH.  YOU DON'T      ***");
     $display(  "***  NEED TO VISUALLY VERIFY THAT THE OUTPUT VALUES     ***");
     $display(  "***  MATCH THE INPUT VALUES FOR EACH REGISTER LOCATION  ***");
     $display(  "***********************************************************\n");
@@ -92,6 +96,28 @@ module instr_register_test
     $display("  operand_a = %0d",   operand_a);
     $display("  operand_b = %0d\n", operand_b);
   endfunction: print_transaction
+
+  function void save_test_data;
+      case (opcode)     // Perform operation based on opcode
+        ZERO:     save_data[write_pointer] = '{opcode, operand_a, operand_b, {64{1'b0}}};
+        PASSA:    save_data[write_pointer] = '{opcode, operand_a, operand_b, operand_a};
+        PASSB:    save_data[write_pointer] = '{opcode, operand_a, operand_b, operand_b};
+        ADD:      save_data[write_pointer] = '{opcode, operand_a, operand_b, operand_a + operand_b};
+        SUB:      save_data[write_pointer] = '{opcode, operand_a, operand_b, operand_a - operand_b};
+        MULT:     save_data[write_pointer] = '{opcode, operand_a, operand_b, operand_a * operand_b};
+        DIV:      save_data[write_pointer] = '{opcode, operand_a, operand_b, operand_b == 0 ? 0 : operand_a / operand_b};
+        MOD:      save_data[write_pointer] = '{opcode, operand_a, operand_b, operand_a % operand_b};
+        default:  save_data[write_pointer] = '{opc:ZERO, default:0};
+      endcase
+
+
+
+  endfunction: save_test_data
+
+  // function void test_data;
+  //   if(save_data[write_pointer] != instruction_word)
+  //   $display("Data mismatch at register location %0d", write_pointer);
+  // endfunction
 
   function void print_results;
     $display("Read from register location %0d: ", read_pointer);
@@ -122,9 +148,13 @@ module instr_register_test
     else
       exp_result = instruction_word.op_a / instruction_word.op_b;
   end
-  else if(instruction_word.opc == MOD);
-    exp_result = instruction_word.op_a % instruction_word.op_b;
-  
+  else if(instruction_word.opc == MOD) begin
+    if(instruction_word.op_b == 0)
+      exp_result = 0;
+    else
+      exp_result = instruction_word.op_a % instruction_word.op_b;
+  end
+
   if(exp_result != instruction_word.res)
     $display("ERROR");
 
