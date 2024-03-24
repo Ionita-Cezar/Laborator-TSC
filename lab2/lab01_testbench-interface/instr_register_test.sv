@@ -24,7 +24,6 @@ module instr_register_test
   parameter WR_NT = 20;
 
   int seed = 555;
-  int exp_result = 0;
 
   instruction_t save_data [0:31];
 
@@ -50,7 +49,6 @@ module instr_register_test
       @(posedge clk) randomize_transaction;
       @(negedge clk) print_transaction;
       save_test_data;
-      // test_data;
     end
     @(posedge clk) load_en = 1'b0;  // turn-off writing to register
 
@@ -98,19 +96,19 @@ module instr_register_test
   endfunction: print_transaction
 
   function void save_test_data;
+    result_t local_res;
       case (opcode)     // Perform operation based on opcode
-        ZERO:     save_data[write_pointer] = '{opcode, operand_a, operand_b, {64{1'b0}}};
-        PASSA:    save_data[write_pointer] = '{opcode, operand_a, operand_b, operand_a};
-        PASSB:    save_data[write_pointer] = '{opcode, operand_a, operand_b, operand_b};
-        ADD:      save_data[write_pointer] = '{opcode, operand_a, operand_b, operand_a + operand_b};
-        SUB:      save_data[write_pointer] = '{opcode, operand_a, operand_b, operand_a - operand_b};
-        MULT:     save_data[write_pointer] = '{opcode, operand_a, operand_b, operand_a * operand_b};
-        DIV:      save_data[write_pointer] = '{opcode, operand_a, operand_b, operand_b == 0 ? 0 : operand_a / operand_b};
-        MOD:      save_data[write_pointer] = '{opcode, operand_a, operand_b, operand_a % operand_b};
-        default:  save_data[write_pointer] = '{opc:ZERO, default:0};
+        ZERO:     local_res = {64{1'b0}};
+        PASSA:    local_res = operand_a;
+        PASSB:    local_res = operand_b;
+        ADD:      local_res = operand_a + operand_b;
+        SUB:      local_res = operand_a - operand_b;
+        MULT:     local_res = operand_a * operand_b;
+        DIV:      local_res = operand_b == 0 ? 0 : operand_a / operand_b;
+        MOD:      local_res = operand_a % operand_b;
       endcase
 
-
+      save_data[write_pointer] = '{opcode, operand_a, operand_b, local_res};
 
   endfunction: save_test_data
 
@@ -128,36 +126,14 @@ module instr_register_test
   endfunction: print_results
 
   function void check_result;
-  exp_result = 0;
-
-  if(instruction_word.opc == ZERO)
-    exp_result = 0;
-  else if(instruction_word.opc == PASSA)
-    exp_result = instruction_word.op_a;
-  else if(instruction_word.opc == PASSB)
-    exp_result = instruction_word.op_b;
-  else if(instruction_word.opc == ADD)
-    exp_result = instruction_word.op_a + instruction_word.op_b;
-  else if(instruction_word.opc == SUB)
-    exp_result = instruction_word.op_a - instruction_word.op_b;
-  else if(instruction_word.opc == MULT)
-    exp_result = instruction_word.op_a * instruction_word.op_b;
-  else if(instruction_word.opc == DIV) begin
-    if(instruction_word.op_b == 0)
-      exp_result = 0;
-    else
-      exp_result = instruction_word.op_a / instruction_word.op_b;
-  end
-  else if(instruction_word.opc == MOD) begin
-    if(instruction_word.op_b == 0)
-      exp_result = 0;
-    else
-      exp_result = instruction_word.op_a % instruction_word.op_b;
-  end
-
-  if(exp_result != instruction_word.res)
-    $display("ERROR");
-
+    if (save_data[read_pointer].opc != instruction_word.opc)
+        $display("Error: Opcode mismatch at register location %0d", read_pointer);
+    else if (save_data[read_pointer].op_a != instruction_word.op_a)
+        $display("Error: Operand A mismatch at register location %0d", read_pointer);
+    else if (save_data[read_pointer].op_b != instruction_word.op_b)
+        $display("Error: Operand B mismatch at register location %0d", read_pointer);
+    else if (save_data[read_pointer].res != instruction_word.res)
+        $display("Error: Result mismatch at register location %0d", read_pointer);
   endfunction: check_result
 
 endmodule: instr_register_test
