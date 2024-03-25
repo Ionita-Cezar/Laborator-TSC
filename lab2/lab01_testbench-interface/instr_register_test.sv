@@ -20,12 +20,20 @@ module instr_register_test
 
   timeunit 1ns/1ns;
 
-  parameter RD_NR = 20;
-  parameter WR_NT = 20;
+  parameter RD_NR = 40;
+  parameter WR_NT = 40;
 
   int seed = 555;
 
   instruction_t save_data [0:31];
+
+  parameter write_order = 0; // 0 - incremental, 1 - random, 2 - decremental
+  parameter read_order = 2;  // 0 - incremental, 1 - random, 2 - decremental
+  
+  int write_order_val = 0;
+  int read_order_val = 0;
+
+  int failed_tests = 0;
 
   initial begin
     $display("\n\n***********************************************************");
@@ -59,10 +67,18 @@ module instr_register_test
       // later labs will replace this loop with iterating through a
       // scoreboard to determine which addresses were written and
       // the expected values to be read back
-      @(posedge clk) read_pointer = i;
+
+      // @(posedge clk) read_pointer = i; - 25/03/2024 - IC
+      case (read_order)
+        0: @(posedge clk) read_pointer = read_order_val++;
+        1: @(posedge clk) read_pointer = $unsigned($random) % 32;
+        2: @(posedge clk) read_pointer = 31 - read_order_val++;
+      endcase
       @(negedge clk) print_results;
       check_result;
     end
+
+    $display("\nTotal failed tests: %d", failed_tests);
 
     @(posedge clk) ;
     $display("\n***********************************************************");
@@ -85,7 +101,12 @@ module instr_register_test
     operand_a     <= $random(seed)%16;                 // between -15 and 15
     operand_b     <= $unsigned($random)%16;            // between 0 and 15
     opcode        <= opcode_t'($unsigned($random)%8);  // between 0 and 7, cast to opcode_t type
-    write_pointer <= temp++;
+    case (write_order)
+      0: write_pointer <= write_order_val++;
+      1: write_pointer <= $unsigned($random) % 32;
+      2: write_pointer <= 31 - write_order_val++;
+    endcase
+    //write_pointer <= temp++; - 25.03.2024 - IC
   endfunction: randomize_transaction
 
   function void print_transaction;
@@ -112,11 +133,6 @@ module instr_register_test
 
   endfunction: save_test_data
 
-  // function void test_data;
-  //   if(save_data[write_pointer] != instruction_word)
-  //   $display("Data mismatch at register location %0d", write_pointer);
-  // endfunction
-
   function void print_results;
     $display("Read from register location %0d: ", read_pointer);
     $display("  opcode = %0d (%s)", instruction_word.opc, instruction_word.opc.name);
@@ -126,14 +142,14 @@ module instr_register_test
   endfunction: print_results
 
   function void check_result;
-    if (save_data[read_pointer].opc != instruction_word.opc)
-        $display("Error: Opcode mismatch at register location %0d", read_pointer);
-    else if (save_data[read_pointer].op_a != instruction_word.op_a)
-        $display("Error: Operand A mismatch at register location %0d", read_pointer);
-    else if (save_data[read_pointer].op_b != instruction_word.op_b)
-        $display("Error: Operand B mismatch at register location %0d", read_pointer);
-    else if (save_data[read_pointer].res != instruction_word.res)
-        $display("Error: Result mismatch at register location %0d", read_pointer);
+    if (save_data[read_pointer].opc != instruction_word.opc ||
+        save_data[read_pointer].op_a != instruction_word.op_a ||
+        save_data[read_pointer].op_b != instruction_word.op_b ||
+        save_data[read_pointer].res != instruction_word.res)
+    begin
+      $display("Error: Test failed at register location %0d", read_pointer);
+      failed_tests++;
+    end
   endfunction: check_result
 
 endmodule: instr_register_test
