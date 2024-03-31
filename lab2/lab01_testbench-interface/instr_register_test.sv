@@ -34,6 +34,7 @@ module instr_register_test
   int read_order_val = 0;
 
   int failed_tests = 0;
+  int passed_tests = 0;
 
   initial begin
     $display("\n\n***********************************************************");
@@ -78,6 +79,7 @@ module instr_register_test
       check_result;
     end
 
+    $display("\nTotal passed tests: %d", passed_tests);
     $display("\nTotal failed tests: %d", failed_tests);
 
     @(posedge clk) ;
@@ -149,6 +151,10 @@ module instr_register_test
     begin
       $display("Error: Test failed at register location %0d", read_pointer);
       failed_tests++;
+    end
+    else
+    begin
+      passed_tests++;
     end
   endfunction: check_result
 
