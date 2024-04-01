@@ -1,0 +1,5 @@
+../../lab2/lab_dut/instr_register_pkg.sv   	                +incdir+../../lab_dut
+../../lab2/lab_dut/instr_register.sv   	                +incdir+../../lab_dut
+
+
+../lab02_clocking_blocks/top.sv                    +incdir+../lab02_clocking_blocks
