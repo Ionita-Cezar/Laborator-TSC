@@ -28,7 +28,7 @@ module instr_register_test
   instruction_t save_data [0:31];
 
   parameter write_order = 0; // 0 - incremental, 1 - random, 2 - decremental
-  parameter read_order = 2;  // 0 - incremental, 1 - random, 2 - decremental
+  parameter read_order = 0;  // 0 - incremental, 1 - random, 2 - decremental
   
   int write_order_val = 0;
   int read_order_val = 0;
@@ -128,7 +128,7 @@ module instr_register_test
         SUB:      local_res = operand_a - operand_b;
         MULT:     local_res = operand_a * operand_b;
         DIV:      local_res = operand_b == 0 ? 0 : operand_a / operand_b;
-        MOD:      local_res = operand_a % operand_b;
+        MOD:      local_res = operand_b == 0 ? 0 : operand_a % operand_b;
       endcase
 
       save_data[write_pointer] = '{opcode, operand_a, operand_b, local_res};
