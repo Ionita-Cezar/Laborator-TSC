@@ -22,13 +22,13 @@ module instr_register_test
 
   parameter RD_NR = 40;
   parameter WR_NT = 40;
+  parameter write_order = 0; // 0 - incremental, 1 - random, 2 - decremental
+  parameter read_order = 0;  // 0 - incremental, 1 - random, 2 - decremental
+  parameter CASE_NAME;
 
   int seed = 555;
 
   instruction_t save_data [0:31];
-
-  parameter write_order = 0; // 0 - incremental, 1 - random, 2 - decremental
-  parameter read_order = 0;  // 0 - incremental, 1 - random, 2 - decremental
   
   int write_order_val = 0;
   int read_order_val = 0;
@@ -56,7 +56,7 @@ module instr_register_test
     // repeat (3) begin - 11/03/2024 - IC
     repeat (WR_NT) begin
       @(posedge clk) randomize_transaction;
-      @(negedge clk) print_transaction;
+      // @(negedge clk) print_transaction;
       save_test_data;
     end
     @(posedge clk) load_en = 1'b0;  // turn-off writing to register
@@ -81,6 +81,9 @@ module instr_register_test
 
     $display("\nTotal passed tests: %d", passed_tests);
     $display("\nTotal failed tests: %d", failed_tests);
+
+    @(posedge clk);
+    report;
 
     @(posedge clk) ;
     $display("\n***********************************************************");
@@ -157,5 +160,16 @@ module instr_register_test
       passed_tests++;
     end
   endfunction: check_result
+
+  function void report;
+    int file;
+    file = $fopen("../reports/regression_status.txt", "a");
+    if(failed_tests != 0) begin
+      $fwrite(file, "Case %s: failed\n", CASE_NAME);
+    end else begin
+    $fwrite(file, "Case %s: passed\ns", CASE_NAME);
+  end
+  $fclose(file);
+  endfunction: report
 
 endmodule: instr_register_test
