@@ -25,8 +25,9 @@ module instr_register_test
   parameter write_order = 0; // 0 - incremental, 1 - random, 2 - decremental
   parameter read_order = 0;  // 0 - incremental, 1 - random, 2 - decremental
   parameter CASE_NAME;
+  parameter SEED_VAL;
 
-  int seed = 555;
+  int seed = SEED_VAL;
 
   instruction_t save_data [0:31];
   
@@ -56,7 +57,7 @@ module instr_register_test
     // repeat (3) begin - 11/03/2024 - IC
     repeat (WR_NT) begin
       @(posedge clk) randomize_transaction;
-      // @(negedge clk) print_transaction;
+      @(negedge clk) print_transaction;
       save_test_data;
     end
     @(posedge clk) load_en = 1'b0;  // turn-off writing to register
